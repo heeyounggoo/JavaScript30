@@ -62,12 +62,42 @@
       background: black;
       position: absolute;
       top: 50%;
+      transform-origin: 100%;
+      transition: all 0.05s;
+      transition-timing-function: cubic-bezier(0.1, 2.7, 0.58, 1);
     }
 
   </style>
 
   <script>
+    const handHours = document.querySelector('.hour-hand')
+    const handMin = document.querySelector('.min-hand')
+    const handSecond = document.querySelector('.second-hand')
 
+    function setTime() {
+      const standardRotate = {
+        hour: 360/12,
+        min: 360/60
+      }
+      const now = new Date()
+      const time = {
+        hours: now.getHours() % 12,
+        min: now.getMinutes(),
+        seconds: now.getSeconds()
+      }
+      // 스타일때문에 90도 더해줘야함
+      const rotate = {
+        hours: (time.hours * standardRotate.hour) + ((standardRotate.hour/60) * time.min) + 90, // 현재 시간 각도 + 한 시간안에 현재 분만큼 움직일 시바늘 각도
+        min: (time.min * standardRotate.min) + ((standardRotate.min/60) * time.seconds) + 90,
+        seconds: time.seconds * standardRotate.min + 90
+      }
+
+      handHours.style.transform = `rotate(${rotate.hours}deg)`
+      handMin.style.transform = `rotate(${rotate.min}deg)`
+      handSecond.style.transform = `rotate(${rotate.seconds}deg)`
+    }
+
+    setInterval(setTime, 1000)
 
   </script>
 </body>
